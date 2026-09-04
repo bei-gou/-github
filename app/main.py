@@ -27,7 +27,7 @@ def main():
                         "index": 0,
                         "message": {
                             "role": "assistant",
-                            "content": "null",
+                            "content": null,
                             "tool_calls": [
                                 {
                                     "id": "call_abc123",
