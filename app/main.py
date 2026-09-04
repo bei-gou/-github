@@ -1,4 +1,5 @@
 import argparse
+import json
 import os
 import sys
 
@@ -20,30 +21,7 @@ def main():
 
     chat = client.chat.completions.create(
         model="anthropic/claude-haiku-4.5",
-        messages=[
-            {
-                "choices": [
-                    {
-                        "index": 0,
-                        "message": {
-                            "role": "assistant",
-                            "content": null,
-                            "tool_calls": [
-                                {
-                                    "id": "call_abc123",
-                                    "type": "function",
-                                    "function": {
-                                        "name": "Read",
-                                        "arguments": "{\"file_path\": \"/path/to/file.txt\"}"
-                                    }
-                                }
-                            ]
-                        },
-                        "finish_reason": "tool_calls"
-                    }
-                ]
-            }
-                 ],
+        messages=[{"role": "user", "content": args.p}],
         tools=[
             {
                 "type": "function",
@@ -70,6 +48,19 @@ def main():
 
     # You can use print statements as follows for debugging, they'll be visible when running tests.
     print("Logs from your program will appear here!", file=sys.stderr)
+
+    message = chat.choices[0].message
+
+    if message.tool_calls:
+        tool_calls = message.tool_calls[0]
+        name = tool_calls.function.name
+        arguments = json.loads(tool_calls.function.arguments)
+
+        if name == "Read":
+            with open(arguments["file_path"], "r") as f:
+                print(f.read(), end="")
+    else:
+        print(message.content)
 
     # TODO: Uncomment the following line to pass the first stage
     print(chat.choices[0].message.content)
