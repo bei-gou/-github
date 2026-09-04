@@ -63,7 +63,7 @@ def main():
         print(message.content)
 
     # TODO: Uncomment the following line to pass the first stage
-    print(chat.choices[0].message.content)
+    # print(chat.choices[0].message.content)
 
 
 if __name__ == "__main__":
